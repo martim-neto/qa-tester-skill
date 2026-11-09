@@ -101,12 +101,12 @@ The `examples/saucedemo/` folder has made-up requirements for
   plugin.json              plugin manifest
   marketplace.json         lets this repo be installed as a marketplace
 skills/
-  review-requirements/
-    SKILL.md
-    templates/requirements-review.md
-  generate-use-cases/
-    SKILL.md
-    templates/use-cases.md
+  review-requirements/SKILL.md   instructions + output format
+  generate-use-cases/SKILL.md    instructions + output format
 examples/
   saucedemo/requirements.md
 ```
+
+Each skill's output format lives at the end of its own `SKILL.md`, so the
+instructions and the format always load together and no extra file access is
+needed outside the user's project.

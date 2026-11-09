@@ -51,9 +51,9 @@ assumption: leave it for Step 3 as a `GAP-xx` case. Assumptions may only fill in
 
 ## Step 2 — Write `use-cases.md`
 
-Write `qa-runs/<run-name>/use-cases.md` following
-[templates/use-cases.md](templates/use-cases.md) **exactly** — stage 3 reads
-this format, so keep the field names and heading pattern unchanged.
+Write `qa-runs/<run-name>/use-cases.md` following the **Output format** at the
+end of this file **exactly** — stage 3 reads this format, so keep the field
+names and heading pattern unchanged.
 
 Rules for each use case:
 - **ID:** `UC-001`, `UC-002`, … in order. Never reuse or renumber IDs after the user has seen the file; new cases get the next free number.
@@ -102,3 +102,66 @@ When the user responds (in this conversation or a later one):
 Stage 2 is complete when **no case is left as `draft`**. Then tell the user the
 run is ready for `execute-tests` (stage 3) with N approved cases. If a case
 was edited after approval, set it back to `draft` and ask for re-approval.
+
+## Output format
+
+Use this structure for `use-cases.md`. Replace everything in `<…>`. Repeat the
+use case block (from `## UC-` to the `---` after it) once per case.
+
+```markdown
+# Use cases — <run-name>
+
+- **Target URL:** <https://test-environment.example>
+- **Generated on:** <YYYY-MM-DD>
+- **Based on:** requirements.md, requirements-review.md
+- **Test data variables:** <`$QA_PASSWORD` — password for the test accounts> <!-- secrets are never written in this file -->
+- **Status:** <n> draft · <n> approved · <n> rejected
+
+> How to review: edit any case below, or change its `Status` to `approved` or
+> `rejected`. Keep the field names and the `## UC-xxx — Title` headings as they
+> are — the test execution stage reads this format.
+
+---
+
+## UC-001 — <Short title, e.g. "Login with valid credentials">
+
+- **Status:** draft
+- **Requirements:** FR-01
+- **Type:** Positive <!-- Positive | Negative | Edge -->
+- **Priority:** High <!-- High | Medium | Low -->
+- **Preconditions:** <starting state reachable from a fresh browser, e.g. "Logged in as standard_user, empty cart, on the products page" — never "after UC-xxx">
+- **Test data:** <concrete values, e.g. "username: standard_user · password: $QA_PASSWORD">
+- **Assumptions:** none <!-- or the assumption from requirements-review.md -->
+
+**Steps**
+
+1. <One user action>
+2. <One user action>
+3. <One user action>
+
+**Expected result** <!-- every line must come from the requirement text or a listed assumption -->
+
+- <Observable outcome, e.g. "After step 3, the products page is shown">
+- <Additional checkpoint if needed, e.g. "After step 4, …">
+
+---
+
+## Traceability matrix
+
+| Requirement | Use cases | Notes |
+|---|---|---|
+| FR-01 | UC-001, UC-002 | |
+| FR-02 | — | Not covered: needs clarification |
+
+## Not covered
+
+| Requirement | Reason |
+|---|---|
+| FR-0x | Needs clarification — see question 1 in requirements-review.md |
+
+## Approval log
+
+| Date | Change |
+|---|---|
+| <YYYY-MM-DD> | Generated <n> use cases (all draft) |
+```

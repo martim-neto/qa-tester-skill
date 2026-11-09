@@ -58,8 +58,8 @@ If a requirement is partly testable, split it (Step 2) rather than downgrading t
 
 ## Step 4 — Write the review
 
-Write `qa-runs/<run-name>/requirements-review.md` using the template in
-[templates/requirements-review.md](templates/requirements-review.md).
+Write `qa-runs/<run-name>/requirements-review.md` following the
+**Output format** at the end of this file.
 
 Rules:
 - **Never invent requirements.** If the document is silent about something, record it as a gap or a question — do not fill it in as fact.
@@ -81,3 +81,65 @@ In chat, give a short summary:
 Then tell the user the next step: review the assumptions, and run
 `generate-use-cases` on the run folder when ready. Do **not** start stage 2
 automatically — the user may want to clarify requirements with the client first.
+
+## Output format
+
+Use this structure for `requirements-review.md`. Replace everything in `<…>`;
+the rows and blocks shown are examples — write one per requirement, gap and question.
+
+```markdown
+# Requirements review — <run-name>
+
+- **Source:** <original file name or "pasted in chat">
+- **Reviewed on:** <YYYY-MM-DD>
+- **Requirements found:** <n> (<note if IDs were assigned or requirements split>)
+
+## Summary
+
+| Verdict | Count |
+|---|---|
+| Testable | <n> |
+| Testable with assumptions | <n> |
+| Needs clarification | <n> |
+
+<2–4 sentences: overall quality and the biggest risks for testing.>
+
+## Per requirement
+
+| ID | Requirement (short) | Verdict | Issues |
+|---|---|---|---|
+| FR-01 | <one-line paraphrase> | Testable | — |
+| FR-02 | <one-line paraphrase> | Testable with assumptions | Complete: "<quoted wording>" |
+| FR-03 | <one-line paraphrase> | Needs clarification | Clear: no threshold defined |
+
+## Details
+
+<Only for requirements that are NOT plainly "Testable". One block each.>
+
+### FR-02 — <title>
+
+- **Issue:** <which check failed and why; quote the wording>
+- **Assumption used for testing:** <the assumption, stated so the client can confirm or reject it>
+
+### FR-03 — <title>
+
+- **Issue:** <which check failed and why>
+- **Impact on testing:** <what cannot be tested until this is answered>
+
+## Gaps (not covered by any requirement)
+
+| ID | Gap |
+|---|---|
+| GAP-01 | <behaviour a user would reasonably hit that no requirement describes> |
+
+## Questions for the client
+
+### Blocking — testing can't start for these requirements until answered
+
+1. **[FR-03]** <specific, answerable question>
+
+### Nice to have — confirms an assumption or closes a gap
+
+2. **[FR-02]** <question confirming the assumption>
+3. **[GAP-01]** <question about the gap>
+```
