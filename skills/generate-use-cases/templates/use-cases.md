@@ -28,10 +28,10 @@
 2. <One user action>
 3. <One user action>
 
-**Expected result**
+**Expected result** <!-- every line must come from the requirement text or a listed assumption -->
 
-- <Observable outcome, e.g. "The products page is shown with the title 'Products'">
-- <Additional checkpoint if needed>
+- <Observable outcome, e.g. "After step 3, the products page is shown">
+- <Additional checkpoint if needed, e.g. "After step 4, …">
 
 ---
 

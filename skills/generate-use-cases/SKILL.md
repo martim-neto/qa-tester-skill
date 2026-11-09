@@ -31,11 +31,23 @@ For each covered requirement, think about:
 3. **Edge / boundary** — empty values, limits (min/max), zero/one/many items, special characters.
 
 Aim for the cases that would actually catch bugs, not every combination.
-Typical size: 1 positive + 1–3 negative/edge per requirement. Merge duplicates
-that would test the same thing.
+Typical size: 1 positive + 1–3 negative/edge per requirement.
+
+**Keep the count down** — every case costs browser time in stage 3:
+- Merge variants of the same behaviour into **one case with several checkpoints** (e.g. all four sort options in one "Sort products" case, with an expected result after each step).
+- Merge duplicates that would test the same thing.
+- Write separate cases only when the variants need different preconditions, or one failing must not hide the others (e.g. each empty mandatory field is its own case, because the first error would stop the form).
 
 **Gaps** (`GAP-xx` in the review) are not requirements, so do not write cases
 for them here. You will offer them to the user in Step 3.
+
+**Stay inside the requirement.** A case belongs to a requirement only if the
+behaviour it checks is in that requirement's text. If you would need an
+assumption to *add* a behaviour the requirement doesn't mention (e.g. "after
+logout the back button must not show the products page" under a requirement
+that only says "logout returns to the login page"), it is a gap, not an
+assumption: leave it for Step 3 as a `GAP-xx` case. Assumptions may only fill in
+*how* a stated behaviour is checked, never add a new one.
 
 ## Step 2 — Write `use-cases.md`
 
@@ -52,7 +64,8 @@ Rules for each use case:
 - **Test data:** concrete values. Use only test accounts/data from the requirements or the test environment — never real personal data.
 - **No secrets in the file.** Never write passwords, tokens or API keys into `use-cases.md`. Use an uppercase placeholder such as `$QA_PASSWORD` and list every placeholder in the header's **Test data variables** line. The execution stage reads the real values from environment variables or a git-ignored `.env` file. Usernames of test accounts are fine to write.
 - **Independent cases.** Every case must be runnable on its own, starting from a fresh browser session. Preconditions describe the starting state concretely (who is logged in, what is in the cart, which page) — never "after UC-xxx". Stage 3 will set the preconditions up before running the steps.
-- **Never invent behaviour.** If the requirement doesn't say what the error message is, the expected result is "an error message is shown and the user stays on the login page", not a made-up message text.
+- **Never invent behaviour.** Every line under **Expected result** must come from either the requirement's text or an assumption listed in the case's `Assumptions` field. If you can't point to one of those, delete the line. Watch for "natural" details the requirement never states (fields being empty after logout, a specific message text, a redirect target, a counter showing 0) — these produce false defects in stage 3.
+  *Example: FR says "an error message is shown" → expected result "An error message is shown", not "The message 'Invalid password' is shown".*
 
 After the cases, fill in the **traceability matrix** (requirement → use cases)
 and the **Not covered** section.
@@ -82,7 +95,7 @@ When the user responds (in this conversation or a later one):
    - reject → `Status: rejected` (keep the case in the file, so the decision is recorded)
    - edits → change the case, keep its ID, set it to `draft` and show the changed case back. A requested change is **not** approved by an "approve everything else" in the same message — the user approves the new wording. Only if they say so explicitly ("change UC-003 to X and approve it") set it to `approved`.
    - new case → append with the next free ID, `Status: draft`, and show it to the user
-3. Update the header counts, the traceability matrix and the **Approval log** (date + what changed, including edits the user made by hand that you noticed).
+3. Update the header counts, the traceability matrix and the **Approval log** (date + what changed).
 4. **Coverage check:** if a requirement now has no case that is `approved` or `draft` (e.g. its only case was rejected), warn the user and ask whether that is intended. Note it in the traceability matrix.
 5. Show the updated summary table.
 

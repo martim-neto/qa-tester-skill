@@ -44,6 +44,11 @@
 
 ## Questions for the client
 
+### Blocking — testing can't start for these requirements until answered
+
 1. **[FR-03]** <specific, answerable question>
+
+### Nice to have — confirms an assumption or closes a gap
+
 2. **[FR-02]** <question confirming the assumption>
 3. **[GAP-01]** <question about the gap>

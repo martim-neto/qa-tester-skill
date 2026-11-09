@@ -44,11 +44,17 @@ Check every requirement against these criteria:
 | **Consistent** | Does it contradict another requirement? | Two different rules for the same field |
 | **Atomic** | Does it describe one behaviour? | "The user can log in, edit their profile and log out" |
 
-Then give each requirement **one verdict**:
+Then give each requirement **one verdict**. Decide by asking: *"Can a tester
+decide pass or fail for the behaviour this requirement describes?"*
 
-- **Testable** — can be turned into use cases as-is.
-- **Testable with assumptions** — testable if we assume something reasonable; list the assumptions explicitly.
-- **Needs clarification** — cannot be tested reliably until the client answers a question.
+- **Testable** — yes, from the text alone. Small open points that don't change the pass/fail decision (exact error wording, default sort order, tie order) are noted as minor issues but **do not** downgrade the verdict.
+  *Example: "Wrong credentials show an error and the user stays on the login page" — testable even though the error text isn't given.*
+- **Testable with assumptions** — yes, but only after assuming something the text doesn't say, and that assumption **changes what counts as a pass**. List each assumption so the client can confirm it.
+  *Example: "Mandatory fields" with no stated behaviour when empty → assume an error is shown and the user can't continue.*
+- **Needs clarification** — no, the core of the requirement is undefined (a missing number, rule or criterion), so any pass/fail decision would be a guess.
+  *Example: "Orders above a certain value get free shipping" — no value given.*
+
+If a requirement is partly testable, split it (Step 2) rather than downgrading the whole thing.
 
 ## Step 4 — Write the review
 
@@ -61,6 +67,7 @@ Rules:
 - Number gaps `GAP-01`, `GAP-02`, … so later stages and client questions can refer to them.
 - Quote the exact problematic wording when flagging ambiguity.
 - Write clarification questions so they can be sent to the client unchanged: one question each, specific, answerable.
+- Split the questions into **Blocking** (a requirement can't be tested until it's answered — one per "Needs clarification" item at most) and **Nice to have** (confirms an assumption or closes a gap). Keep Blocking short — it's the list the client must answer. Merge questions that ask about the same thing.
 - Keep it short. A requirement with no issues gets one line, not a paragraph.
 
 ## Step 5 — Hand off to the user
@@ -68,6 +75,7 @@ Rules:
 In chat, give a short summary:
 - counts per verdict (e.g. "7 testable, 2 with assumptions, 1 needs clarification"),
 - the 3 most important issues,
+- how many questions are blocking vs nice to have,
 - the path to the review file.
 
 Then tell the user the next step: review the assumptions, and run
