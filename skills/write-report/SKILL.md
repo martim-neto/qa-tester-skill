@@ -96,11 +96,13 @@ For each one, write a candidate (`CAND-01`, `CAND-02`, …) with:
 - a **suggestion**, one of:
   - **Promote** — clearly wrong for any user, and a requirement covers it at least loosely;
   - **Ask the client** — it depends on what the client wants (requirement gap; link a `GAP-xx` or open question if there is one);
-  - **Retest** — a check that was masked by another defect; run it again once that defect is fixed;
   - **Dismiss** — not about the app under test (e.g. errors from a third-party tracking script, the demo password shown on a demo site).
 
 Merge duplicates (the same observation in several cases → one candidate).
 Don't create a candidate for something that's already part of a defect.
+Checks masked by a defect (Pass with caveat, Blocked by defect) are **not**
+candidates: they go in the report's **Not verified and why** with "retest after
+DEF-00x is fixed".
 
 **Never promote a candidate yourself.** The user decides in Step 6.
 
