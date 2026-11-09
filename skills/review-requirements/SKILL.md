@@ -12,18 +12,22 @@ single test case. You do not write test cases here; that is stage 2.
 
 ## Inputs
 
-- A requirements document: a file path (.md, .txt, .docx, .pdf) or text pasted in chat.
+- A requirements document: a file path (.md, .txt) or text pasted in chat — **or** a run folder that already has `requirements.md` (made by `import-document`).
+- PDF, Word and other formats: run `import-document` first. It converts the file to Markdown with MarkItDown, which costs far fewer tokens than reading the file directly.
 - Optional: a run name. If none is given, use `YYYY-MM-DD-<short-topic>` (e.g. `2026-11-09-saucedemo`).
 
 If the input is unclear (no requirements given, or several candidate files), ask the user before continuing.
 
 ## Step 1 — Create the run folder
 
+If the input is a run folder that already has `requirements.md`, use it and go
+to Step 2. Otherwise:
+
 1. Create `qa-runs/<run-name>/` in the current working directory.
    If it already exists, ask whether to overwrite or pick a new name.
 2. Copy the requirements into `qa-runs/<run-name>/requirements.md` **verbatim**
-   (convert .docx/.pdf to Markdown text, but do not reword anything).
-   Every later stage reads this copy, so it must match the source.
+   (do not reword anything). Every later stage reads this copy, so it must
+   match the source.
 
 ## Step 2 — Identify each requirement
 

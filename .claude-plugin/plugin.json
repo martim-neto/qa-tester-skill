@@ -1,6 +1,6 @@
 {
   "name": "qa-tester",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Modular AI-assisted functional testing: review requirements, generate use cases for human approval, execute them in the browser, and report evidence and defects.",
   "author": {
     "name": "Martim Neto"

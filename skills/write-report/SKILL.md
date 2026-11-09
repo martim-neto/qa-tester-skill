@@ -18,7 +18,7 @@ results. A human decides which observations become defects.
 A run folder `qa-runs/<run-name>/` containing:
 - `test-results.md` (required — if missing, stop and suggest running `execute-tests`)
 - `use-cases.md` (required — steps, test data and expected results)
-- `requirements.md` and `requirements-review.md` (for coverage and open questions)
+- `requirements.md` and `requirements-review.md` (for coverage and open questions). Both may be missing when the use cases were imported from a client document — then build coverage from the **Requirements** field of each use case, and say in the report that no requirements document was reviewed.
 - `evidence/` (screenshots linked from the results)
 
 If `defects.md` already exists, this is an **update**: see Step 7.
