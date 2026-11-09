@@ -1,6 +1,6 @@
 ---
 name: write-report
-description: Stage 4 of the QA tester workflow. Turns the results of an executed QA run (test-results.md and its screenshots) into a test report for stakeholders (test-report.md) and a defect list grouped by root cause (defects.md), and lets the user decide which side observations become defects. Use after execute-tests, when the user wants a test report, a defect list or bug report, or wants to promote or dismiss candidate defects in a QA run.
+description: Stage 4 of the QA tester workflow. Turns the results of an executed QA run (test-results.md and its screenshots) into a test report for stakeholders (test-report.md plus a PDF with every use case and its screenshot evidence) and a defect list grouped by root cause (defects.md), and lets the user decide which side observations become defects. Use after execute-tests, when the user wants a test report, a defect list or bug report, or wants to promote or dismiss candidate defects in a QA run.
 argument-hint: <run-folder>
 ---
 
@@ -127,6 +127,19 @@ broken, what's still unknown).
 Don't give a go / no-go release decision. Give the facts, and leave the decision
 to the reader.
 
+**Build the PDF.** Don't write the PDF yourself — a script does it, so it costs
+no tokens and looks the same every time. Run:
+
+```
+node "${CLAUDE_PLUGIN_ROOT}/skills/write-report/scripts/build-pdf.mjs" qa-runs/<run-name>
+```
+
+It reads the four Markdown files and writes `test-report.html` and
+`test-report.pdf` to the run folder: cover with summary and coverage, the
+defects, then one page per use case with its steps, checkpoints and screenshots.
+It needs Node and a local Chrome or Edge. If it prints `ERROR`, tell the user the
+message; the Markdown files are still the complete report.
+
 Then in chat:
 1. Counts: defects by severity, requirements by status.
 2. The candidate table: `ID | What | Suggestion`.
@@ -145,12 +158,13 @@ When the user responds (now or in a later conversation):
    candidate `promoted → DEF-00x`.
 3. **Dismiss** → mark the candidate `dismissed` with the user's reason if given. Keep it in the file.
 4. Update the counts, the decision log and the report's summary.
+5. Run the PDF script again (Step 6) so the PDF matches.
 
 **After a re-run of stage 3** (`test-results.md` is newer than `defects.md`):
 - keep existing defect IDs and human edits;
 - a defect whose affected cases now all pass → Status `retest passed — confirm and close` (only a human closes a defect);
 - new failures → new defects with new IDs;
-- regenerate `test-report.md` for the latest results.
+- regenerate `test-report.md` for the latest results, then the PDF.
 
 ## Rules
 
