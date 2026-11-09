@@ -3,8 +3,8 @@
 A Claude Code plugin that turns client functional requirements into tested,
 evidenced results — with a human approving the test plan before anything runs.
 
-> Status: **v0.1 — stages 1 and 2** (requirements review + use case generation).
-> Browser execution and reporting are next.
+> Status: **v0.2 — stages 1–3** (requirements review, use case generation,
+> browser execution with evidence). Reporting is next.
 
 ## The workflow
 
@@ -21,7 +21,7 @@ evidenced results — with a human approving the test plan before anything runs.
   ✋ Human review — edit cases, set status: approved / rejected
        │
        ▼
- [3] execute-tests       ──► evidence/UC-xxx/…        (coming next)
+ [3] execute-tests       ──► test-results.md, evidence/UC-xxx/step-NN.png
        │
        ▼
  [4] write-report        ──► test-report.md, defects.md (coming next)
@@ -31,7 +31,7 @@ evidenced results — with a human approving the test plan before anything runs.
 |---|---|---|
 | 1 | `review-requirements` | ✅ v0.1 |
 | 2 | `generate-use-cases` | ✅ v0.1 |
-| 3 | `execute-tests` | planned (Playwright MCP) |
+| 3 | `execute-tests` | ✅ v0.2 (Playwright MCP) |
 | 4 | `write-report` | planned |
 | — | `qa-run` (orchestrator) | planned |
 | later | `suggest-fixes` | idea |
@@ -47,7 +47,8 @@ qa-runs/<run-name>/
   requirements.md          input — the client's functional requirements (copied in)
   requirements-review.md   stage 1 output
   use-cases.md             stage 2 output; edited and approved by a human
-  evidence/                stage 3 output (planned)
+  test-results.md          stage 3 output — pass/fail/blocked per checkpoint
+  evidence/UC-xxx/         stage 3 output — one screenshot per checkpoint
   test-report.md           stage 4 output (planned)
   defects.md               stage 4 output (planned)
 ```
@@ -73,6 +74,33 @@ Skills are namespaced by the plugin, e.g. `/qa-tester:review-requirements`.
 You can also just describe the task ("review these requirements") and Claude
 picks the right skill from its description.
 
+## Setup for stage 3 (browser)
+
+The plugin starts its own browser tool,
+[Playwright MCP](https://github.com/microsoft/playwright-mcp) `0.0.84`, from
+`.mcp.json`. You need:
+
+- **Node.js 18+** (for `npx`)
+- **Google Chrome** — or set `QA_BROWSER` to `msedge`, `firefox` or `webkit` before starting Claude
+- A **`.env` file in your project folder** with the test secrets your use cases
+  reference, e.g.
+
+  ```
+  QA_PASSWORD=<test account password>
+  ```
+
+> **Create `.env` before starting Claude.** The browser server reads it at
+> startup and doesn't start without it. If you add it later, restart Claude.
+
+How secrets stay out of the AI's context: use cases only contain placeholders
+(`$QA_PASSWORD`). When typing, Claude passes the *name* (`QA_PASSWORD`) and
+Playwright fills in the real value from `.env`; matching values are also masked
+in what the browser tool sends back. It's a safeguard, not a vault — use test
+accounts only.
+
+The browser runs **visible** and **isolated**: every use case starts from a clean
+session with no cookies or saved logins.
+
 ## Quick start with the example
 
 The `examples/saucedemo/` folder has made-up requirements for
@@ -82,6 +110,8 @@ The `examples/saucedemo/` folder has made-up requirements for
 2. Read `qa-runs/<run>/requirements-review.md`
 3. `/qa-tester:generate-use-cases qa-runs/<run>`
 4. Edit `use-cases.md`, then tell Claude which cases to approve
+5. Create `.env` (password is shown on the saucedemo login page), restart Claude, then
+   `/qa-tester:execute-tests qa-runs/<run>`
 
 ## Rules of use
 
@@ -100,9 +130,11 @@ The `examples/saucedemo/` folder has made-up requirements for
 .claude-plugin/
   plugin.json              plugin manifest
   marketplace.json         lets this repo be installed as a marketplace
+.mcp.json                  starts Playwright MCP (the browser) for stage 3
 skills/
   review-requirements/SKILL.md   instructions + output format
   generate-use-cases/SKILL.md    instructions + output format
+  execute-tests/SKILL.md         instructions + output format
 examples/
   saucedemo/requirements.md
 ```
