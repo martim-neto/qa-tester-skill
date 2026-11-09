@@ -3,8 +3,8 @@
 A Claude Code plugin that turns client functional requirements into tested,
 evidenced results — with a human approving the test plan before anything runs.
 
-> Status: **v0.2 — stages 1–3** (requirements review, use case generation,
-> browser execution with evidence). Reporting is next.
+> Status: **v0.3 — all four stages** (requirements review, use case generation,
+> browser execution with evidence, test report and defect list).
 
 ## The workflow
 
@@ -24,7 +24,10 @@ evidenced results — with a human approving the test plan before anything runs.
  [3] execute-tests       ──► test-results.md, evidence/UC-xxx/step-NN.png
        │
        ▼
- [4] write-report        ──► test-report.md, defects.md (coming next)
+ [4] write-report        ──► test-report.md, defects.md
+       │
+       ▼
+  ✋ Human review — promote or dismiss candidate defects, set priorities
 ```
 
 | Stage | Skill | Status |
@@ -32,7 +35,7 @@ evidenced results — with a human approving the test plan before anything runs.
 | 1 | `review-requirements` | ✅ v0.1 |
 | 2 | `generate-use-cases` | ✅ v0.1 |
 | 3 | `execute-tests` | ✅ v0.2 (Playwright MCP) |
-| 4 | `write-report` | planned |
+| 4 | `write-report` | ✅ v0.3 |
 | — | `qa-run` (orchestrator) | planned |
 | later | `suggest-fixes` | idea |
 
@@ -49,8 +52,8 @@ qa-runs/<run-name>/
   use-cases.md             stage 2 output; edited and approved by a human
   test-results.md          stage 3 output — pass/fail/blocked per checkpoint
   evidence/UC-xxx/         stage 3 output — one screenshot per checkpoint
-  test-report.md           stage 4 output (planned)
-  defects.md               stage 4 output (planned)
+  test-report.md           stage 4 output — summary, requirement coverage, open items
+  defects.md               stage 4 output — defects by root cause + candidate defects
 ```
 
 `qa-runs/` is git-ignored on purpose: runs can contain client data and screenshots.
@@ -112,6 +115,11 @@ The `examples/saucedemo/` folder has made-up requirements for
 4. Edit `use-cases.md`, then tell Claude which cases to approve
 5. Create `.env` (password is shown on the saucedemo login page), restart Claude, then
    `/qa-tester:execute-tests qa-runs/<run>`
+6. `/qa-tester:write-report qa-runs/<run>`, then tell Claude which candidate
+   defects to promote or dismiss
+
+Tip: change the username in `use-cases.md` to `problem_user` (saucedemo's
+deliberately buggy account) to see real defects.
 
 ## Rules of use
 
@@ -122,7 +130,7 @@ The `examples/saucedemo/` folder has made-up requirements for
 - **Client data** — check your company's AI usage policy before giving the tool
   real client requirements.
 - **A human signs off** — the AI drafts the plan and judges results, a person
-  approves the plan and reviews the defects.
+  approves the plan, decides which observations become defects, and sets priorities.
 
 ## Repo layout
 
@@ -135,6 +143,7 @@ skills/
   review-requirements/SKILL.md   instructions + output format
   generate-use-cases/SKILL.md    instructions + output format
   execute-tests/SKILL.md         instructions + output format
+  write-report/SKILL.md          instructions + output formats (report + defects)
 examples/
   saucedemo/requirements.md
 ```

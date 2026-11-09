@@ -66,6 +66,7 @@ Rules for each use case:
 - **Independent cases.** Every case must be runnable on its own, starting from a fresh browser session. Preconditions describe the starting state concretely (who is logged in, what is in the cart, which page) — never "after UC-xxx". Stage 3 will set the preconditions up before running the steps.
 - **Never invent behaviour.** Every line under **Expected result** must come from either the requirement's text or an assumption listed in the case's `Assumptions` field. If you can't point to one of those, delete the line. Watch for "natural" details the requirement never states (fields being empty after logout, a specific message text, a redirect target, a counter showing 0) — these produce false defects in stage 3.
   *Example: FR says "an error message is shown" → expected result "An error message is shown", not "The message 'Invalid password' is shown".*
+- **Check the condition before the judged action.** In Negative and Edge cases, add a checkpoint right before the action being judged that confirms the condition under test is really in place, using only the case's own test data. *Example (empty first name): "After step 3, First Name is empty and Last Name and Postal Code show the entered values" — then "After step 4, an error message is shown".* Without it, another bug can quietly change the condition and the case passes without testing anything.
 
 After the cases, fill in the **traceability matrix** (requirement → use cases)
 and the **Not covered** section.

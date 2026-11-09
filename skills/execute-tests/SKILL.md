@@ -65,6 +65,13 @@ For each line in **Expected result** ("After step X, …"):
    - **Fail** — it doesn't. State expected vs observed precisely.
    - **Blocked** — the checkpoint couldn't be reached.
 
+**A Pass must test what the case is about.** Before passing a checkpoint, make
+sure the condition the case sets up was really in place (e.g. the field meant to
+be empty was empty, the typed text is in the right field). If the app changed
+the condition — so the expected result happened for a different reason — the
+checkpoint is **Blocked** with "condition not met: <what happened>", never Pass.
+Describe the app behaviour that caused it under Other observations.
+
 Judge only what the expected result says. Things you notice that the expected
 result doesn't mention (a layout glitch, a console error, a wrong image) go in
 the case's **Other observations** — they are **not** failures of this case.
@@ -90,9 +97,9 @@ Step 1.5 resumes from there.
 2. Fill in the **Summary** table and counts at the top of `test-results.md`.
 3. In chat, report: counts (pass / fail / blocked / skipped), a one-line list
    of failed and blocked cases with the main reason, and the path to the file.
-4. Tell the user the next step: review the failures and evidence; stage 4
-   (`write-report`) will turn them into a test report and a defect list. Do not
-   write defects yourself here.
+4. Tell the user the next step: review the failures and evidence, then run
+   stage 4 with `/qa-tester:write-report qa-runs/<run-name>` to turn them into a
+   test report and a defect list. Do not write defects yourself here.
 
 ## Rules
 
