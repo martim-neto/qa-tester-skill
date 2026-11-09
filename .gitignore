@@ -1,0 +1,11 @@
+# Test runs produced while using the skills (may contain client data / screenshots)
+qa-runs/
+
+# Test credentials / secrets used by the execution stage
+.env
+.env.*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/

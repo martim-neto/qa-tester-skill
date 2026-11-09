@@ -1,0 +1,13 @@
+{
+  "name": "qa-tester-marketplace",
+  "owner": {
+    "name": "Martim Neto"
+  },
+  "plugins": [
+    {
+      "name": "qa-tester",
+      "source": "./",
+      "description": "Modular AI-assisted functional testing skills."
+    }
+  ]
+}
